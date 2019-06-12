@@ -21,9 +21,9 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
         );
         List<UserMealWithExceed> list = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
-        list.forEach(item -> System.out.println(item.getDateTime() + " " + item.getDescription() + " " + item.getCalories() + " " + item.isExceed()));
+        list.forEach(System.out::println);
         List<UserMealWithExceed> listByStream = getFilteredWithExceededByStream(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
-        listByStream.forEach(item -> System.out.println(item.getDateTime() + " " + item.getDescription() + " " + item.getCalories() + " " + item.isExceed()));
+        listByStream.forEach(System.out::println);
     }
 
 
