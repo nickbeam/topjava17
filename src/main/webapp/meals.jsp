@@ -1,4 +1,3 @@
-<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -12,6 +11,7 @@
 <hr>
 <h2>Meals</h2>
 
+<a href="meals?id=&action=add"><img src="img/add.png"> Add meal</a>
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>
@@ -28,8 +28,8 @@
             <td>${meal.dateTime.toString().replace('T', ' ')}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
-            <td>Update</td>
-            <td>Delete</td>
+            <td><a href="meals?id=${meal.id}&action=edit"><img src="img/pencil.png" alt="Delete"></a></td>
+            <td><a href="meals?id=${meal.id}&action=delete"><img src="img/delete.png" alt="Delete"></a></td>
         </tr>
     </c:forEach>
     </tbody>
