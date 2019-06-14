@@ -11,7 +11,7 @@
 <hr>
 <h2>Meals</h2>
 
-<a href="meals?id=&action=add"><img src="img/add.png"> Add meal</a>
+<a href="meals?&action=add"><img src="img/add.png"> Add meal</a>
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>
