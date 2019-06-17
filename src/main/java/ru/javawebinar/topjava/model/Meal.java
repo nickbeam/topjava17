@@ -21,11 +21,11 @@ public class Meal {
     }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
-        this(null, dateTime, description, calories);
+        this(nextId.incrementAndGet(), dateTime, description, calories);
     }
 
-    public Meal(AtomicInteger id, LocalDateTime dateTime, String description, int calories) {
-        this.id = nextId.incrementAndGet();
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;

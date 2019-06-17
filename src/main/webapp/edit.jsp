@@ -28,7 +28,7 @@
         <dd><input type="number" name="calories" value="${meal.calories}"></dd>
     </dl>
     <button type="submit">Save</button>
-    <button onclick="window.history.back()">Cancel</button>
+    <button onclick="window.history.back()" type="button">Cancel</button>
 </form>
 
 </body>

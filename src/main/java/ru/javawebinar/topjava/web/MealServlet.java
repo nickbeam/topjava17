@@ -30,29 +30,13 @@ public class MealServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        int id = Integer.parseInt(request.getParameter("id").trim());
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String dt = request.getParameter("dateTime").trim();
-        LocalDateTime dateTime = dt.length() < 5 ? LocalDateTime.now() : LocalDateTime.parse(request.getParameter("dateTime").replace("T", " "), dtf);
-        String description = request.getParameter("description").trim();
-        String calories = request.getParameter("calories").trim();
-        Meal meal;
-        if (id == 0 && description.equals("")) {
-            LOG.debug("redirect to meals");
-            response.sendRedirect("meals");
-            return;
-        } else if (id == 0 && !description.isEmpty()) {
-            LOG.debug("add new meal");
-            meal = new Meal(dateTime, description, Integer.parseInt(calories));
-            storage.save(meal);
-        } else {
-            LOG.debug("update meal with id=" + id);
-            meal = storage.get(id);
-            meal.setDateTime(dateTime);
-            meal.setDescription(description);
-            meal.setCalories(Integer.parseInt(calories));
-            storage.update(meal);
-        }
+        String id = request.getParameter("id");
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description").trim(),
+                Integer.valueOf(request.getParameter("calories")));
+        LOG.debug("save meal");
+        storage.save(meal);
         LOG.debug("redirect to meals");
         response.sendRedirect("meals");
     }
@@ -71,7 +55,7 @@ public class MealServlet extends HttpServlet {
         switch (action) {
             case "add":
                 LOG.debug("forward to add new meal page");
-                meal = new Meal();
+                meal = new Meal(LocalDateTime.now(), "New meal", 1000);
                 break;
             case "delete":
                 LOG.debug("delete meal with id=" + id);

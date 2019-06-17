@@ -6,17 +6,11 @@ import java.util.List;
 
 public interface IStorage {
 
-    void clear();
-
     Meal get(int id);
-
-    void update(Meal meal);
 
     void save(Meal meal);
 
     void delete(int id);
 
     List<Meal> getAll();
-
-    int size();
 }
