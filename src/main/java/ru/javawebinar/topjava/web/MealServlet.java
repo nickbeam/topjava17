@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -64,7 +62,7 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             LOG.debug("forward to meals");
-            List<MealTo> mealList = MealsUtil.getFilteredWithExcess(storage.getAll(), LocalTime.of(0, 0), LocalTime.of(23, 59), 2000);
+            List<MealTo> mealList = MealsUtil.getWithExcess(storage.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY);
             request.setAttribute("meals", mealList);
             request.getRequestDispatcher("meals.jsp").forward(request, response);
             return;
