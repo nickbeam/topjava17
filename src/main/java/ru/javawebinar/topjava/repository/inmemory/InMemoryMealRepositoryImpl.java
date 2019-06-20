@@ -5,42 +5,65 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private Map<Integer, HashMap<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        MealsUtil.MEALS.forEach(meal -> save(1, meal));
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(int userId, Meal meal) {
+        HashMap<Integer, Meal> meals = repository.get(userId);
+        if (meals.isEmpty()) {
+            return null;
+        }
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.put(meal.getId(), meal);
+            meals.put(meal.getId(), meal);
+            repository.put(userId, meals);
             return meal;
         }
         // treat case: update, but absent in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        meals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        repository.put(userId, meals);
+        return meal;
     }
 
     @Override
-    public boolean delete(int id) {
-        return repository.remove(id) != null;
+    public boolean delete(int userId, int id) {
+        HashMap<Integer, Meal> meals = repository.get(userId);
+        if (meals.isEmpty() || !meals.containsKey(id)) {
+            return false;
+        }
+        meals.remove(id);
+        return repository.put(userId, meals) != null;
     }
 
     @Override
-    public Meal get(int id) {
-        return repository.get(id);
+    public Meal get(int userId, int id) {
+        HashMap<Integer, Meal> meals = repository.get(userId);
+        if (meals.isEmpty()) {
+            return null;
+        }
+        return meals.get(id);
     }
 
     @Override
-    public Collection<Meal> getAll() {
-        return repository.values();
+    public Collection<Meal> getAll(int userId) {
+        HashMap<Integer, Meal> meals = repository.get(userId);
+        if (meals.isEmpty()) {
+            return null;
+        }
+        return meals.values();
     }
 }
 
