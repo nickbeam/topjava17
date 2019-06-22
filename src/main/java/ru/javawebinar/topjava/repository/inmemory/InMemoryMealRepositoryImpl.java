@@ -19,7 +19,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(meal -> save(authUserId(), meal));
+        MealsUtil.MEALS_ADMIN.forEach(meal -> save(1, meal));
+        MealsUtil.MEALS_USER.forEach(meal -> save(2, meal));
     }
 
     @Override
@@ -28,9 +29,6 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
             repository.put(userId, new HashMap<>());
         }
         HashMap<Integer, Meal> meals = repository.get(userId);
-        if (meals.isEmpty()) {
-            return null;
-        }
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             meals.put(meal.getId(), meal);

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
-    public static final List<Meal> MEALS = Arrays.asList(
+    public static final List<Meal> MEALS_ADMIN = Arrays.asList(
             new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
             new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
             new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
@@ -26,14 +26,29 @@ public class MealsUtil {
             new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
     );
 
+    public static final List<Meal> MEALS_USER = Arrays.asList(
+            new Meal(LocalDateTime.of(2018, Month.MAY, 20, 10, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2018, Month.MAY, 21, 10, 0), "Завтрак", 1000)
+    );
+
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
     public static List<MealTo> getWithExcess(Collection<Meal> meals, int caloriesPerDay) {
         return getFilteredWithExcess(meals, caloriesPerDay, meal -> true);
     }
 
-    public static List<MealTo> getFilteredWithExcess(Collection<Meal> meals, int caloriesPerDay, LocalTime startTime, LocalTime endTime) {
-        return getFilteredWithExcess(meals, caloriesPerDay, meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime));
+    public static List<MealTo> getFilteredWithExcess(Collection<Meal> meals, int caloriesPerDay, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return getFilteredWithExcess(getFiltered(meals, meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate)), caloriesPerDay, meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime));
+    }
+
+    public static List<MealTo> getFilteredByDateWithExcess(Collection<Meal> meals, int caloriesPerDay, LocalDate startDate, LocalDate endDate) {
+        return getFilteredWithExcess(meals, caloriesPerDay, meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate));
+    }
+
+    private static List<Meal> getFiltered(Collection<Meal> meals, Predicate<Meal> filter) {
+        return meals.stream()
+                .filter(filter)
+                .collect(toList());
     }
 
     private static List<MealTo> getFilteredWithExcess(Collection<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
