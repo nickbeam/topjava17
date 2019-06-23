@@ -27,8 +27,9 @@ public class MealServlet extends HttpServlet {
     private MealRestController controller;
 
     {
-        ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        controller = appCtx.getBean(MealRestController.class);
+        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
+            controller = appCtx.getBean(MealRestController.class);
+        }
     }
 
     @Override

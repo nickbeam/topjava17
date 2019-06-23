@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,17 +45,13 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public boolean delete(int userId, int id) {
         HashMap<Integer, Meal> meals = repository.get(userId);
-        if (meals.isEmpty() || !meals.containsKey(id)) {
-            return false;
-        }
-        meals.remove(id);
-        return repository.put(userId, meals) != null;
+        return meals.remove(id) != null && repository.put(userId, meals) != null;
     }
 
     @Override
     public Meal get(int userId, int id) {
         HashMap<Integer, Meal> meals = repository.get(userId);
-        if (meals.isEmpty()) {
+        if (meals == null) {
             return null;
         }
         return meals.get(id);
@@ -63,8 +60,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public Collection<Meal> getAll(int userId) {
         HashMap<Integer, Meal> meals = repository.get(userId);
-        if (meals.isEmpty()) {
-            return null;
+        if (meals == null) {
+            return Collections.emptyList();
         }
         return meals.values();
     }
