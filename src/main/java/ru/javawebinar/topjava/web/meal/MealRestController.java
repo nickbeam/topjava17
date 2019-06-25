@@ -29,33 +29,41 @@ public class MealRestController {
     }
 
     public Meal create(Meal meal) {
-        log.info("create {}", meal);
+        int userId = authUserId();
+        log.info("create meal {} of user {}", meal, userId);
         checkNew(meal);
-        return service.create(authUserId(), meal);
+        return service.create(userId, meal);
     }
 
     public void delete(int id) {
-        log.info("delete {}", id);
-        service.delete(authUserId(), id);
+        int userId = authUserId();
+        log.info("delete meal {} of user {}", id, userId);
+        service.delete(userId, id);
     }
 
     public Meal get(int id) {
-        log.info("get {}", id);
-        return service.get(authUserId(), id);
+        int userId = authUserId();
+        log.info("get meal {} of user {}", id, userId);
+        return service.get(userId, id);
     }
 
     public void update(Meal meal, int id) {
-        log.info("update {} with id={}", meal, id);
+        int userId = authUserId();
+        log.info("update meal {} with id = {} of user {}", meal, id, userId);
         assureIdConsistent(meal, id);
-        service.update(authUserId(), meal);
+        service.update(userId, meal);
     }
 
     public List<MealTo> getAll() {
-        log.info("getAll");
-        return service.getAll(authUserId(), authUserCaloriesPerDay());
+        int userId = authUserId();
+        log.info("getAll meals of user {}", userId);
+        return service.getAll(userId, authUserCaloriesPerDay());
     }
 
     public List<MealTo> getFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        int userId = authUserId();
+        log.info("getFiltered meals between date from {} to {} time from {} to {} of user {}",startDate, endDate, startTime, endTime, userId);
+
         return service.getFiltered(authUserId(), startDate, endDate, startTime, endTime, authUserCaloriesPerDay());
     }
 }
