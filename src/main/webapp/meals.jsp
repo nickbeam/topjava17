@@ -24,16 +24,16 @@
     <br>
     <form method="post" action="meals?action=filter">
         <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" name="startDate">
+        <input type="date" id="startDate" name="startDate" value="${param.startDate}">
 
         <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" name="endDate">
+        <input type="date" id="endDate" name="endDate" value="${param.endDate}">
 
         <label for="startTime">Start Time:</label>
-        <input type="time" id="startTime" name="startTime">
+        <input type="time" id="startTime" name="startTime" value="${param.startTime}">
 
         <label for="endTime">End Time:</label>
-        <input type="time" id="endTime" name="endTime">
+        <input type="time" id="endTime" name="endTime" value="${param.endTime}">
         <button type="submit">Filter</button>
     </form>
     <br>
