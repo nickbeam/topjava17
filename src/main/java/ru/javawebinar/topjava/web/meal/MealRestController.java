@@ -2,12 +2,10 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -64,6 +62,6 @@ public class MealRestController {
         int userId = authUserId();
         log.info("getFiltered meals between date from {} to {} time from {} to {} of user {}",startDate, endDate, startTime, endTime, userId);
 
-        return service.getFiltered(authUserId(), startDate, endDate, startTime, endTime, authUserCaloriesPerDay());
+        return service.getFiltered(userId, startDate, endDate, startTime, endTime, authUserCaloriesPerDay());
     }
 }

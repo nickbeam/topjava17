@@ -3,16 +3,15 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
@@ -55,6 +54,19 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     public Collection<Meal> getAll(int userId) {
         ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
         return meals == null ? Collections.emptyList() : meals.values();
+    }
+
+    @Override
+    public Collection<Meal> getBetween(int userId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return getFiltered(userId, meal -> DateTimeUtil.isBetween(meal.getDateTime(), startDateTime, endDateTime));
+    }
+
+    private Collection<Meal> getFiltered(int userId, Predicate<Meal> filter) {
+        ConcurrentHashMap<Integer, Meal> meals = repository.get(userId);
+        return meals == null ? Collections.emptyList() : meals.values().stream()
+                .filter(filter)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }
 

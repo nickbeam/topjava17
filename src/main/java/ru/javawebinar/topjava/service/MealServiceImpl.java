@@ -10,8 +10,11 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.adjustEndDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.adjustStartDate;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -46,7 +49,8 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<MealTo> getFiltered(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        return MealsUtil.getFilteredWithExcess(repository.getAll(userId), caloriesPerDay, startDate, endDate, startTime, endTime);
+        Collection<Meal> meals = repository.getBetween(userId, adjustStartDate(startDate), adjustEndDate(endDate));
+        return MealsUtil.getFilteredWithExcess(meals, caloriesPerDay, startTime, endTime);
     }
 
     @Override
