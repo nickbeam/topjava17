@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,15 +16,17 @@ import java.time.LocalTime;
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
     @Column(name = "date_time", nullable = false)
-    @NotEmpty
+    @NotNull
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
+    @NotNull
     @NotBlank
     @Size(max = 255)
     private String description;
 
     @Column(name = "calories", nullable = false)
+    @NotNull
     @Range(min = 1, max = 3000)
     private int calories;
 
