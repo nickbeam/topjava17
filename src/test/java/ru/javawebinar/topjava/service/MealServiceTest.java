@@ -64,10 +64,6 @@ public class MealServiceTest {
                 "\n---------------------------------");
     }
 
-    static {
-        SLF4JBridgeHandler.install();
-    }
-
     @Autowired
     private MealService service;
 
