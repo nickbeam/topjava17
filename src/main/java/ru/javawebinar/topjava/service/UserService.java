@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.repository.datajpa.DataJpaUserRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
@@ -19,9 +20,12 @@ public class UserService {
 
     private final UserRepository repository;
 
+    private final DataJpaUserRepository dataJpaUserRepository;
+
     @Autowired
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, DataJpaUserRepository dataJpaUserRepository) {
         this.repository = repository;
+        this.dataJpaUserRepository = dataJpaUserRepository;
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -47,6 +51,10 @@ public class UserService {
     @Cacheable("users")
     public List<User> getAll() {
         return repository.getAll();
+    }
+
+    public User getWithMeals(int id) {
+        return dataJpaUserRepository.getWithMeals(id);
     }
 
     @CacheEvict(value = "users", allEntries = true)
